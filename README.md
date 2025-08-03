@@ -90,8 +90,8 @@ tiny-rag has been evaluated on standard Japanese retrieval benchmarks to demonst
 
 | Dataset | NDCG@10 | MRR@10 | MAP@10 | Hits@10 | Avg Query Time |
 |---------|---------|---------|---------|---------|----------------|
-| JQaRA   | 0.7944  | 0.8000  | -       | -       | 0.755 sec      |
-| JaCWIR  | -       | -       | 0.8000  | 0.8000  | 1.185 sec      |
+| JQaRA   | 0.8553  | 0.8796  | -       | -       | 0.771 sec      |
+| JaCWIR  | -       | -       | 0.8368  | 0.8646  | 0.925 sec      |
 
 ### Running Benchmarks
 
@@ -113,8 +113,8 @@ python -m bench.benchmark --dimensions 512 --max-queries 10
 
 ### Performance Insights
 
-- **High Accuracy**: Achieves 0.79-0.80 scores across all metrics
-- **Practical Speed**: Query processing under 1.2 seconds even for large datasets
+- **High Accuracy**: Achieves 0.84-0.88 scores across all metrics
+- **Practical Speed**: Query processing under 1 second even for large datasets
 - **Scalable**: Performance scales reasonably with dataset size
 - **CPU-Friendly**: All processing runs efficiently on standard hardware
 
