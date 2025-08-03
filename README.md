@@ -1,146 +1,116 @@
-# Python UV Template
+# tiny-rag
 
-A modern Python project template using UV, Ruff, and best practices for Python development. This template provides a streamlined, fully-configured starting point for new Python projects with focus on reliability, type safety, and modern development workflow.
+A lightweight RAG (Retrieval-Augmented Generation) package that runs entirely on CPU without requiring GPUs or cloud services.
 
-## Features
+## Overview
 
-- **Python 3.13 support** - Latest Python version with full typing and modern features
-- **UV Package Manager** - Fast, reliable alternative to pip for dependency management
-- **Ruff Integration** - Comprehensive Python linter and formatter
-- **Type Checking** - MyPy configured with strict settings
-- **Testing with Coverage** - Pytest configured with coverage reporting
-- **Pre-commit Hooks** - Automated code quality checks
-- **Conventional Commits** - Enforced commit message format
-- **Security Scanning** - Gitleaks integration to prevent secrets in commits
-- **Pure Python Package** - Proper package structure with `py.typed` support
+tiny-rag is designed to make RAG accessible to everyone by removing the typical hardware and service dependencies. While traditional RAG systems require GPU-accelerated embedding models and reranker models (like OpenAI's text-embedding services), tiny-rag provides a fully functional RAG implementation that runs efficiently on CPU-only environments.
+
+tiny-rag leverages [static-embedding-japanese](https://huggingface.co/hotchpotch/static-embedding-japanese), an ultra-fast embedding model that achieves 126x faster CPU inference compared to traditional transformer models while maintaining strong performance on Japanese text tasks.
+
+## Key Features
+
+- **CPU-Only Execution**: No GPU required - runs on any standard computer
+- **No Cloud Dependencies**: Fully offline operation without external API calls
+- **Lightweight**: Minimal resource footprint for embedding and reranking
+- **Easy to Use**: Simple API for quick integration into your projects
+- **Cost-Effective**: No cloud service fees or expensive hardware requirements
+- **Japanese Language Support**: Currently optimized for Japanese text processing
+
+## Language Support
+
+⚠️ **Important**: tiny-rag currently supports **Japanese language only**. Support for additional languages is planned for future releases.
+
+## Installation
+
+```bash
+pip install tiny-rag
+```
 
 ## Quick Start
 
-### Creating a New Project
+```python
+from tiny_rag import TinyRAG
 
-This is a [Copier](https://copier.readthedocs.io/) template. To create a new project:
+# Initialize tiny-rag
+rag = TinyRAG()
 
-1. Generate a new project:
-   ```
-   copier copy gh:sonesuke/python-uv-template path/to/your-project
-   ```
+# Add documents (Japanese text)
+rag.add_documents([
+    "ドキュメント1の内容...",
+    "ドキュメント2の内容...",
+])
 
-2. You'll be prompted for:
-   - `project_name`: Your project name (can contain hyphens)
-   - `package_name`: Python package name (will use underscores by default)
-
-### Development Setup
-
-Once your project is created:
-
-1. Set up a virtual environment and install development dependencies:
-   ```
-   uv sync
-   ```
-
-2. Set up pre-commit:
-   ```
-   uv run pre-commit install
-   ```
-
-### Development Workflow
-
-- **Format and lint code**:
-  ```
-  uv run ruff check --fix
-  ```
-
-- **Run tests with coverage**:
-  ```
-  uv run pytest --cov=src
-  ```
-
-- **Type checking**:
-  ```
-  uv run pyright
-  ```
-
-## Project Structure
-
-```
-your-project/
-├── src/
-│   └── your_package/
-│       ├── __init__.py
-│       └── py.typed         # Marker file for type checking
-├── tests/
-│   └── test_your_package.py
-├── .pre-commit-config.yaml  # Pre-commit hook configuration
-├── .python-version          # Python version specification
-├── pyproject.toml           # Project configuration 
-└── README.md                # Project documentation
+# Query (in Japanese)
+results = rag.query("あなたの質問をここに入力")
 ```
 
-## Configuration Details
+## Use Cases
 
-### Package Configuration
+- **Local Development**: Test RAG pipelines without cloud costs
+- **Edge Computing**: Deploy RAG on resource-constrained devices
+- **Privacy-Sensitive Applications**: Keep all data processing local
+- **Educational Projects**: Learn RAG concepts without infrastructure overhead
+- **Japanese Text Processing**: Optimized for Japanese language applications
 
-The project uses `pyproject.toml` for all configuration, following modern Python packaging standards:
+## Technical Details
 
-- **Build System**: Hatchling for reliable, modern packaging
-- **Dependencies**: Minimal core dependencies by default, add what you need
-- **Development Tools**:
-  - MyPy for comprehensive type checking with strict settings
-  - Pytest with coverage reporting
-  - Ruff for fast, comprehensive linting and formatting
+### Embedding Model
 
-### Ruff Configuration
+tiny-rag uses [static-embedding-japanese](https://huggingface.co/hotchpotch/static-embedding-japanese), which provides:
 
-Ruff is configured with a comprehensive set of rules:
+- **Ultra-fast CPU Performance**: 126x faster inference than comparable transformer models
+- **1024-dimensional embeddings**: Can be reduced to 32-512 dimensions for efficiency
+- **Simple Architecture**: Uses token embedding averaging instead of complex attention mechanisms
+- **Strong Benchmark Performance**: JMTEB score of 67.17 (micro-average)
+- **Matryoshka Representation Learning**: Enables efficient dimension reduction without retraining
 
-- C9: McCabe complexity checking to keep functions maintainable
-- ANN: Type annotations enforcement for better code quality
-- S: Security checks to catch common vulnerabilities
-- E, F, W: Style and error checking (pycodestyle, pyflakes, warnings)
-- I: Import sorting for consistent organization
-- D: Documentation standards enforcement
+### Reranker Model
 
-The default configuration sets:
-- Line length to 120 characters
-- Double quotes for string literals
-- Split imports on trailing commas
-- Maximum complexity of 20
+For improved retrieval accuracy, tiny-rag employs [japanese-reranker-xsmall-v2](https://huggingface.co/hotchpotch/japanese-reranker-xsmall-v2):
 
-### MyPy Configuration
+- **Compact Size**: Only 36.8M parameters with 10 layers
+- **High Performance**: Average score of 0.8699 on Japanese benchmarks
+- **CPU-Friendly**: Designed to run at practical speeds on CPU and Apple Silicon
+- **Modern Architecture**: Based on ModernBert for efficient text ranking
+- **Excellent Benchmark Results**: JaCWIR (0.9409), JSQuAD (0.9776), MIRACL (0.8206)
 
-Type checking is configured with strict settings:
+Both models are specifically chosen for their exceptional CPU performance while maintaining high-quality results for Japanese text processing.
 
-- Strict mode enabled for comprehensive type checking
-- Files limited to the `src` directory
-- Untyped imports are allowed to facilitate working with third-party libraries
+## Requirements
 
-### Testing Configuration
+- Python 3.13+
+- No GPU required
+- Minimal RAM requirements
 
-Tests are configured using pytest:
+## Development
 
-- Test discovery in the `tests` directory
-- Python path configured to include the `src` directory
-- Coverage reporting set up to track code coverage
+### Setup
 
-## Using UV for Dependency Management
+```bash
+# Clone the repository
+git clone https://github.com/sonesuke/tiny-rag.git
+cd tiny-rag
 
-[UV](https://github.com/astral-sh/uv) is a fast, reliable Python package installer and resolver that significantly speeds up dependency management:
+# Install development dependencies
+uv sync
 
-- **Install dependencies**: `uv sync`
-- **Add a new dependency**: `uv add package-name`
+# Run tests
+uv run pytest --cov=src
+```
 
-## Benefits of This Template
+### Contributing
 
-- **Consistency**: Enforced code style and quality through automated tools
-- **Reliability**: Type checking and comprehensive testing
-- **Security**: Pre-commit hooks catch secrets and security issues
-- **Speed**: UV package manager is significantly faster than pip
-- **Modern Practices**: Configured for current Python best practices
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-This template is available as open source under the terms of the MIT License.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Contributing
+## Author
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+- **sonesuke** - [GitHub](https://github.com/sonesuke)
+
+## Acknowledgments
+
+Built with a focus on accessibility and efficiency, making RAG technology available to everyone regardless of hardware limitations.
