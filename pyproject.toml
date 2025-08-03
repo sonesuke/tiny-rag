@@ -26,6 +26,7 @@ dependencies = [
     "typing-extensions>=4.0.0",
     "protobuf>=3.20.0",
     "sentencepiece>=0.1.95",
+    "faiss-cpu>=1.7.4",
 ]
 
 [project.urls]
@@ -58,6 +59,7 @@ dev = [
     "scipy>=1.10.0",
     "pandas>=2.0.0",
     "tqdm>=4.64.0",
+    "faiss-cpu>=1.7.4",
 ]
 
 [tool.pyright]
