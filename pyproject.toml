@@ -20,7 +20,11 @@ classifiers = [
 ]
 license = { text = "MIT" }
 keywords = []
-dependencies = []
+dependencies = [
+    "sentence-transformers>=3.3.1",
+    "numpy>=1.24.0",
+    "typing-extensions>=4.0.0",
+]
 
 [project.urls]
 "Homepage" = "https://github.com/sonesuke/tiny-rag"
@@ -114,9 +118,7 @@ ignore = [
   "D408",  # section-underline-after-name
   "D409",  # section-underline-matches-section-length
   "S101",  # Use of assert (common in tests)
-  "PLR0913", # Too many arguments
-  "ANN101", # Missing type annotation for self
-  "ANN102", # Missing type annotation for cls
+  "PLR0913" # Too many arguments
 ]
 
 [tool.ruff.lint.isort]

@@ -15,7 +15,7 @@ test:
 	uv run pytest tests/ -v
 
 lint:
-	uv run ruff format src/
+	uv run ruff format src/ tests/
 	uv run ruff check --fix src/
 	uv run pyright
 
