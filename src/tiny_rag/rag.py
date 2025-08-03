@@ -42,9 +42,8 @@ class TinyRAG:
         # Generate embeddings for all documents
         embeddings = self._embedding_model.embed(valid_documents)
 
-        # Add to vector store
-        for document, embedding in zip(valid_documents, embeddings, strict=False):
-            self._vector_store.add(document, embedding)
+        # Add to vector store using batch method for better FAISS performance
+        self._vector_store.add_batch(valid_documents, list(embeddings))
 
     def query(self, query: str, top_k: int = 5) -> list[QueryResult]:
         """Query the RAG system for relevant documents.
