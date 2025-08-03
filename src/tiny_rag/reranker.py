@@ -1,14 +1,14 @@
-"""Reranker module using japanese-reranker-xsmall-v2 model."""
+"""Reranker module using japanese-reranker-tiny-v2 model."""
 
 from sentence_transformers import CrossEncoder
 
 
 class Reranker:
-    """Reranker using japanese-reranker-xsmall-v2 for improved retrieval accuracy."""
+    """Reranker using japanese-reranker-tiny-v2 for improved retrieval accuracy."""
 
     def __init__(self) -> None:
         """Initialize the reranker model."""
-        self.model_name = "hotchpotch/japanese-reranker-xsmall-v2"
+        self.model_name = "hotchpotch/japanese-reranker-tiny-v2"
 
         # Initialize CrossEncoder with CPU device
         self._model = CrossEncoder(self.model_name, device="cpu")

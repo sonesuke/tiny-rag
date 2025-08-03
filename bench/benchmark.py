@@ -169,7 +169,7 @@ def evaluate_on_jacwir(rag: TinyRAG, max_queries: int | None = None) -> dict[str
     }
 
 
-def run_benchmark(dimensions: int = 1024, max_queries: int | None = None) -> dict[str, dict[str, float]]:
+def run_benchmark(dimensions: int = 128, max_queries: int | None = None) -> dict[str, dict[str, float]]:
     """Run full benchmark on both datasets.
 
     Args:
@@ -209,7 +209,7 @@ def main() -> None:
     """Main function for command-line usage."""
     parser = argparse.ArgumentParser(description="Run TinyRAG benchmark on JQaRA and JaCWIR datasets")
     parser.add_argument(
-        "--dimensions", type=int, default=1024, choices=[32, 64, 128, 256, 512, 1024], help="Embedding dimensions"
+        "--dimensions", type=int, default=128, choices=[32, 64, 128, 256, 512, 1024], help="Embedding dimensions"
     )
     parser.add_argument("--max-queries", type=int, help="Maximum queries per dataset (for testing)")
 
