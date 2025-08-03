@@ -54,10 +54,14 @@ dev = [
     "pytest>=8.3.5",
     "pytest-cov>=6.1.1",
     "ruff>=0.11.10",
+    "datasets>=3.0.0",
+    "scipy>=1.10.0",
+    "pandas>=2.0.0",
+    "tqdm>=4.64.0",
 ]
 
 [tool.pyright]
-include = ["src"]
+include = ["src", "tests", "bench"]
 exclude = ["**/__pycache__", "**/node_modules"]
 strict = ["src"]
 typeCheckingMode = "strict"
@@ -69,6 +73,19 @@ reportUnusedFunction = true
 reportUnusedVariable = true
 reportDuplicateImport = true
 reportPrivateImportUsage = true
+
+# Separate config for bench directory with relaxed type checking
+[[tool.pyright.executionEnvironments]]
+root = "bench"
+reportUnknownVariableType = "none"
+reportUnknownMemberType = "none"
+reportUnknownArgumentType = "none"
+reportUnknownParameterType = "none"
+reportMissingTypeArgument = "none"
+reportArgumentType = "none"
+reportIndexIssue = "none"
+reportCallIssue = "none"
+reportAttributeAccessIssue = "none"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
