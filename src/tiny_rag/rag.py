@@ -1,6 +1,7 @@
 """Main RAG implementation."""
 
 from .embeddings import DEFAULT_DIMENSIONS, EmbeddingModel
+from .reranker import Reranker
 from .types import QueryResult
 from .vector_store import VectorStore
 
@@ -17,6 +18,7 @@ class TinyRAG:
         self.dimensions = dimensions
         self._embedding_model = EmbeddingModel(dimensions)
         self._vector_store = VectorStore(dimensions)
+        self._reranker = Reranker()
 
     @property
     def document_count(self) -> int:
@@ -60,8 +62,11 @@ class TinyRAG:
         # Generate query embedding
         query_embedding = self._embedding_model.embed(query)[0]  # Get first (and only) embedding
 
+        # Retrieve more candidates than final top_k for reranking
+        retrieve_k = min(top_k * 3, self._vector_store.size)
+
         # Search vector store
-        search_results = self._vector_store.search(query_embedding, top_k)
+        search_results = self._vector_store.search(query_embedding, retrieve_k)
 
         # Convert to QueryResult objects
         query_results: list[QueryResult] = []
@@ -69,4 +74,25 @@ class TinyRAG:
             query_result = QueryResult(doc_id=result.doc_id, document=result.document, similarity=result.similarity)
             query_results.append(query_result)
 
-        return query_results
+        # Apply reranking
+        if query_results:
+            documents = [r.document for r in query_results]
+            reranked_docs, reranked_scores = self._reranker.rerank(query, documents, top_k)
+
+            # Create new QueryResult objects with reranked scores
+            # Need to find original doc_ids for reranked documents
+            doc_to_result = {r.document: r for r in query_results}
+            reranked_results: list[QueryResult] = []
+
+            for doc, score in zip(reranked_docs, reranked_scores, strict=True):
+                original_result = doc_to_result[doc]
+                reranked_result = QueryResult(
+                    doc_id=original_result.doc_id,
+                    document=doc,
+                    similarity=score,  # Use reranker score instead of vector similarity
+                )
+                reranked_results.append(reranked_result)
+
+            return reranked_results
+
+        return query_results[:top_k]
