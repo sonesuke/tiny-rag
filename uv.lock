@@ -1167,7 +1167,6 @@ dependencies = [
 [package.dev-dependencies]
 dev = [
     { name = "datasets" },
-    { name = "faiss-cpu" },
     { name = "pandas" },
     { name = "pyright" },
     { name = "pytest" },
@@ -1190,7 +1189,6 @@ requires-dist = [
 [package.metadata.requires-dev]
 dev = [
     { name = "datasets", specifier = ">=3.0.0" },
-    { name = "faiss-cpu", specifier = ">=1.7.4" },
     { name = "pandas", specifier = ">=2.0.0" },
     { name = "pyright", specifier = ">=1.1.390" },
     { name = "pytest", specifier = ">=8.3.5" },

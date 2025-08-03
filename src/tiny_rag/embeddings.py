@@ -4,7 +4,7 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 
 # Default embedding dimension for static-embedding-japanese
-DEFAULT_DIMENSIONS = 1024
+DEFAULT_DIMENSIONS = 128
 
 
 class EmbeddingModel:

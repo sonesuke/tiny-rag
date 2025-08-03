@@ -67,13 +67,14 @@ tiny-rag uses [static-embedding-japanese](https://huggingface.co/hotchpotch/stat
 
 ### Reranker Model
 
-For improved retrieval accuracy, tiny-rag employs [japanese-reranker-xsmall-v2](https://huggingface.co/hotchpotch/japanese-reranker-xsmall-v2):
+For improved retrieval accuracy, tiny-rag employs [japanese-reranker-tiny-v2](https://huggingface.co/hotchpotch/japanese-reranker-tiny-v2):
 
-- **Compact Size**: Only 36.8M parameters with 10 layers
-- **High Performance**: Average score of 0.8699 on Japanese benchmarks
-- **CPU-Friendly**: Designed to run at practical speeds on CPU and Apple Silicon
-- **Modern Architecture**: Based on ModernBert for efficient text ranking
-- **Excellent Benchmark Results**: JaCWIR (0.9409), JSQuAD (0.9776), MIRACL (0.8206)
+- **Ultra-Compact**: Only 29.4M parameters with 3 layers
+- **Blazing Fast**: 50-65% faster query processing than larger models
+- **Good Performance**: Average score of 0.8138 on Japanese benchmarks
+- **CPU-Optimized**: Specifically designed for CPU and Apple Silicon
+- **Modern Architecture**: Based on ModernBERT with 256 hidden dimensions
+- **Strong Benchmark Results**: JaCWIR (0.9287), JSQuAD (0.9608), MIRACL (0.7201)
 
 Both models are specifically chosen for their exceptional CPU performance while maintaining high-quality results for Japanese text processing.
 
