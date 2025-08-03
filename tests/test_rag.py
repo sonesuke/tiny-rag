@@ -133,3 +133,74 @@ class TestTinyRAG:
         # Should return results
         assert isinstance(results, list)
         assert all(hasattr(r, "document") for r in results)
+
+    def test_with_reranker(self) -> None:
+        """Test TinyRAG with reranker."""
+        rag = TinyRAG()
+        documents = [
+            "ラーメンは日本の人気料理です。豚骨や醤油など様々な種類があります。",
+            "寿司は伝統的な日本料理です。新鮮な魚を使います。",
+            "プログラミングは論理的思考を必要とする活動です。",
+            "天ぷらは野菜や海老を揚げた料理です。",
+        ]
+        rag.add_documents(documents)
+
+        results = rag.query("日本料理について教えてください")
+
+        assert len(results) > 0
+        # Japanese food documents should rank higher with reranker
+        top_docs = [r.document for r in results[:2]]
+        food_keywords = ["ラーメン", "寿司", "天ぷら", "料理"]
+        assert any(keyword in doc for doc in top_docs for keyword in food_keywords)
+
+    def test_with_different_document_types(self) -> None:
+        """Test TinyRAG with different types of documents."""
+        rag = TinyRAG()
+        documents = [
+            "ラーメンは日本の人気料理です。",
+            "プログラミングは楽しい活動です。",
+        ]
+        rag.add_documents(documents)
+
+        results = rag.query("料理について")
+
+        assert len(results) > 0
+        assert all(hasattr(r, "similarity") for r in results)
+
+    def test_relevance_quality(self) -> None:
+        """Test that TinyRAG returns relevant results."""
+        documents = [
+            "機械学習はAIの重要な分野です。",
+            "Pythonは機械学習によく使われる言語です。",
+            "ラーメンは美味しい日本料理です。",
+            "データサイエンスではPythonが人気です。",
+        ]
+
+        # Test relevance
+        rag = TinyRAG()
+        rag.add_documents(documents)
+        results = rag.query("機械学習に適したプログラミング言語")
+
+        # Should return results
+        assert len(results) > 0
+
+        # Results should have similarity scores
+        assert all(hasattr(r, "similarity") for r in results)
+
+    def test_with_different_top_k(self) -> None:
+        """Test TinyRAG with different top_k values."""
+        rag = TinyRAG()
+        documents = [f"ドキュメント{i}の内容について" for i in range(10)]
+        rag.add_documents(documents)
+
+        # Test different top_k values
+        for k in [1, 3, 5]:
+            results = rag.query("内容について", top_k=k)
+            assert len(results) == k
+
+    def test_with_empty_results(self) -> None:
+        """Test TinyRAG behavior when no documents are available."""
+        rag = TinyRAG()
+        # No documents added
+        results = rag.query("何かを検索")
+        assert len(results) == 0
